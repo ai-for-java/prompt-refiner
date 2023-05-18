@@ -26,13 +26,10 @@
     margin-bottom: 10px;
   }
 
-  .input-id {
-    width: 50%;
-  }
-
   .remove-button {
     text-align: right;
   }
+
 </style>
 
 <div class="container main-container">
@@ -51,10 +48,10 @@
       <div *ngFor="let input of prompt.userPromptInputs; index as i">
         <div class="input-box">
           <div class="row">
-            <div class="col-6 form-group input-id">
+            <div class="col-10 form-group">
               <input [(ngModel)]="input.id" placeholder="Input ID" class="form-control">
             </div>
-            <div class="col-6 form-group remove-button">
+            <div class="col-2 form-group remove-button">
               <button class="btn btn-primary" (click)="removeInput(i)">Remove</button>
             </div>
           </div>

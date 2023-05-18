@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import {Component} from '@angular/core';
+import {Observable} from 'rxjs';
 
 
 interface APIResponse {
@@ -77,7 +77,7 @@ export class AppComponent {
   }
 
   addInput() {
-    this.prompt.userPromptInputs.push({ id: '', text: '' });
+    this.prompt.userPromptInputs.push({id: '', text: ''});
   }
 
   removeInput(index: number) {
@@ -101,7 +101,7 @@ export class AppComponent {
       },
     ];
     if (this.prompt.systemPrompt.trim() !== '') {
-      messages.unshift({ role: 'system', content: this.prompt.systemPrompt });
+      messages.unshift({role: 'system', content: this.prompt.systemPrompt});
     }
     const body = {
       model: this.config.model,
@@ -112,6 +112,15 @@ export class AppComponent {
 
     // Log headers and body
     console.log('Request: ', body);
+
+    this.requestsAndResponses.unshift({
+      response: '',
+      request: `Model: ${this.config.model}\nTemperature: ${this.config.temperature}\n\nSystem Prompt: ${this.prompt.systemPrompt}\n\nUser Prompt: ${this.prompt.userPrompt}`
+    });
+
+    for (const input of this.prompt.userPromptInputs) {
+      this.requestsAndResponses[0].request += `\n${input.id}: ${input.text}`;
+    }
 
     this.chatStream(
       'https://api.openai.com/v1/chat/completions',
@@ -125,11 +134,6 @@ export class AppComponent {
   // ...
   chatStream(url: string, body: string, apikey: string) {
     const self = this;
-
-    this.requestsAndResponses.unshift({
-      response: '',
-      request: body
-    });
 
     return new Observable<string>(observer => {
       fetch(url, {
@@ -149,7 +153,7 @@ export class AppComponent {
         }
 
         function push() {
-          return reader?.read().then(({ done, value }) => {
+          return reader?.read().then(({done, value}) => {
             if (done) {
               observer.complete();
               return;
@@ -160,7 +164,7 @@ export class AppComponent {
             let content = '';
             for (let i = 0; i < events.length; i++) {
               const event = events[i];
-              if (event === 'data: [DONE]'){
+              if (event === 'data: [DONE]') {
                 const timestamp = Date.now().toString();
                 localStorage.setItem(timestamp + "-response", self.requestsAndResponses[0].response);
                 break;
@@ -194,6 +198,7 @@ export class AppComponent {
   maxNumberOfLines(str1: string, str2: string): number {
     return Math.max(this.numberOfLines(str1), this.numberOfLines(str2))
   }
+
   numberOfLines(str: string): number {
     const matches = str.match(/\n/g);
     return matches ? matches.length + 1 : 1;
