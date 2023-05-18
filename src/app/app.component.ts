@@ -58,14 +58,18 @@ export class AppComponent {
   };
 
   analyzePrompt(value: string): void {
-    const regex = /\$\{([^\}]*)\}/g;
+    const regex = /\{\{([^\}]*)\}\}/g;
     let match;
     while (match = regex.exec(value)) {
-      const placeholderId = match[1];
-      if (!this.prompt.userPromptInputs.some(input => input.id === placeholderId)) {
+      const placeholderId = match[1].trim();
+      if (placeholderId && !this.prompt.userPromptInputs.some(input => input.id === placeholderId)) {
         this.prompt.userPromptInputs.push({id: placeholderId, text: ''});
       }
     }
+  }
+
+  clearModel(): void {
+    this.config.model = '';
   }
 
   addInput() {

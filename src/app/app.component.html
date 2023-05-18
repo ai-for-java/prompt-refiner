@@ -4,17 +4,21 @@
     padding: 20px;
     border-radius: 10px;
   }
+
   h2 {
     color: #3c3c3c;
     margin-bottom: 20px;
   }
+
   .form-control {
     margin-bottom: 15px;
   }
+
   .btn-primary {
     background-color: #007bff;
     border-color: #007bff;
   }
+
   .btn-primary:hover {
     background-color: #0069d9;
     border-color: #0062cc;
@@ -28,7 +32,8 @@
       <textarea [(ngModel)]="prompt.systemPrompt" class="form-control" rows="1"></textarea>
 
       <h2>User Prompt</h2>
-      <textarea [(ngModel)]="prompt.userPrompt" (ngModelChange)="analyzePrompt($event)" class="form-control" rows="10"></textarea>
+      <textarea [(ngModel)]="prompt.userPrompt" (ngModelChange)="analyzePrompt($event)" class="form-control"
+                rows="10"></textarea>
 
       <h2>Inputs</h2>
       <div *ngFor="let input of prompt.userPromptInputs; index as i">
@@ -45,10 +50,15 @@
 
     <div class="col-4">
       <h2>Parameters</h2>
+
       <div class="form-group">
         <label for="model">Model</label>
-        <input [(ngModel)]="config.model" id="model" class="form-control">
+        <select [(ngModel)]="config.model" id="model" class="form-control">
+          <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+          <option value="gpt-4">gpt-4</option>
+        </select>
       </div>
+
       <div class="form-group">
         <label for="temperature">Temperature</label>
         <input [(ngModel)]="config.temperature" id="temperature" class="form-control">
