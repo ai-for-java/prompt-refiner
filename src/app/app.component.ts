@@ -38,6 +38,11 @@ interface Input {
   text: string;
 }
 
+interface RequestResponse {
+  request: string;
+  response: string;
+}
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -108,20 +113,24 @@ export class AppComponent {
     // Log headers and body
     console.log('Request: ', body);
 
-    this.responses.unshift('')
-
     this.chatStream(
       'https://api.openai.com/v1/chat/completions',
-      JSON.stringify(body),
+      JSON.stringify(body, null, 4),
       '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'
     ).subscribe();
   }
 
-  responses: string[] = [];
+  requestsAndResponses: RequestResponse[] = [];
 
   // ...
   chatStream(url: string, body: string, apikey: string) {
-    const self = this; // Capture reference to 'this'
+    const self = this;
+
+    this.requestsAndResponses.unshift({
+      response: '',
+      request: body
+    });
+
     return new Observable<string>(observer => {
       fetch(url, {
         method: 'POST',
@@ -152,20 +161,15 @@ export class AppComponent {
             for (let i = 0; i < events.length; i++) {
               const event = events[i];
               if (event === 'data: [DONE]'){
-                self.responses[0] += '\n\n';
-                self.responses[0] += '########################################';
-                self.responses[0] += '\n\n';
-                self.responses[0] += body
-
                 const timestamp = Date.now().toString();
-                localStorage.setItem(timestamp + "-response", self.responses[0]);
+                localStorage.setItem(timestamp + "-response", self.requestsAndResponses[0].response);
                 break;
               }
               if (event && event.slice(0, 6) === 'data: ') {
                 const data = JSON.parse(event.slice(6));
                 let partialResponse = data.choices[0].delta?.content || '';
                 console.log(partialResponse);
-                self.responses[0] += partialResponse; // Use the captured reference 'self'
+                self.requestsAndResponses[0].response += partialResponse; // Use the captured reference 'self'
                 content += partialResponse;
               }
             }
@@ -187,6 +191,9 @@ export class AppComponent {
     });
   }
 
+  maxNumberOfLines(str1: string, str2: string): number {
+    return Math.max(this.numberOfLines(str1), this.numberOfLines(str2))
+  }
   numberOfLines(str: string): number {
     const matches = str.match(/\n/g);
     return matches ? matches.length + 1 : 1;

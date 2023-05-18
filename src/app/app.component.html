@@ -40,7 +40,7 @@
     <div class="col-9">
 
       <h4>System Prompt</h4>
-      <textarea [(ngModel)]="prompt.systemPrompt" class="form-control" rows="2"></textarea>
+      <textarea [(ngModel)]="prompt.systemPrompt" class="form-control" rows="1"></textarea>
 
       <h4>User Prompt</h4>
       <textarea [(ngModel)]="prompt.userPrompt" (ngModelChange)="analyzePrompt($event)" class="form-control"
@@ -90,13 +90,13 @@
   <br/>
 
   <h4>Responses</h4>
-  <div *ngFor="let response of responses">
+  <div *ngFor="let requestAndResponse of requestsAndResponses">
     <div class="row">
       <div class="col-8">
-        <textarea [value]="response" class="form-control" [rows]="numberOfLines(response)" readonly></textarea>
+        <textarea [value]="requestAndResponse.response" class="form-control" [rows]="maxNumberOfLines(requestAndResponse.response, requestAndResponse.request)" readonly></textarea>
       </div>
       <div class="col-4">
-        <textarea [value]="response" class="form-control" [rows]="numberOfLines(response)" readonly></textarea>
+        <textarea [value]="requestAndResponse.request" class="form-control" [rows]="maxNumberOfLines(requestAndResponse.response, requestAndResponse.request)" readonly></textarea>
       </div>
     </div>
     <br>
