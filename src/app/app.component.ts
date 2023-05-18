@@ -24,8 +24,9 @@ interface APIResponse {
 }
 
 interface Prompt {
-  main: string;
-  inputs: Input[];
+  systemPrompt: string;
+  userPrompt: string;
+  userPromptInputs: Input[];
 }
 
 interface Input {
@@ -46,24 +47,25 @@ export class AppComponent {
     temperature: 0.0
   };
   prompt: Prompt = {
-    main: '',
-    inputs: [],
+    userPrompt: '',
+    systemPrompt: '',
+    userPromptInputs: [],
   };
 
   constructor(private http: HttpClient) {
   }
 
   addInput() {
-    this.prompt.inputs.push({id: '', text: ''});
+    this.prompt.userPromptInputs.push({id: '', text: ''});
   }
 
   removeInput(index: number) {
-    this.prompt.inputs.splice(index, 1);
+    this.prompt.userPromptInputs.splice(index, 1);
   }
 
   callAPI() {
-    let finalPrompt = this.prompt.main;
-    for (const input of this.prompt.inputs) {
+    let finalPrompt = this.prompt.userPrompt;
+    for (const input of this.prompt.userPromptInputs) {
       finalPrompt = finalPrompt.replace(`\${${input.id}}`, input.text);
     }
 
@@ -71,14 +73,18 @@ export class AppComponent {
       'Content-Type': 'application/json',
       Authorization: `Bearer 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`,
     };
+    const messages = [
+      {
+        role: 'user',
+        content: finalPrompt,
+      },
+    ];
+    if (this.prompt.systemPrompt.trim() !== '') {
+      messages.unshift({ role: 'system', content: this.prompt.systemPrompt });
+    }
     const body = {
       model: this.config.model,
-      messages: [
-        {
-          role: 'user',
-          content: finalPrompt,
-        },
-      ],
+      messages,
       temperature: +this.config.temperature,
     };
 
@@ -96,6 +102,7 @@ export class AppComponent {
               '\n\n' +
               '################################################################\n' +
               '################################################################\n\n'
+              + 'System Prompt: ' + this.prompt.systemPrompt + '\n'
               + 'Prompt: ' + finalPrompt + '\n'
               + 'Model: ' + this.config.model + '\n'
               + 'Temperature: ' + this.config.temperature);

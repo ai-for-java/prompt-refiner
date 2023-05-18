@@ -1,20 +1,24 @@
 <div class="container">
   <div class="row">
     <div class="col-8">
+
+      <h2>System Prompt</h2>
+      <textarea [(ngModel)]="prompt.systemPrompt" class="form-control" rows="2"></textarea>
+
       <h2>Prompt</h2>
-      <textarea [(ngModel)]="prompt.main" class="form-control" rows="5"></textarea>
+      <textarea [(ngModel)]="prompt.userPrompt" class="form-control" rows="10"></textarea>
 
       <h2>Inputs</h2>
-      <div *ngFor="let input of prompt.inputs; index as i">
+      <div *ngFor="let input of prompt.userPromptInputs; index as i">
         <div class="input-group mt-3">
           <input [(ngModel)]="input.id" placeholder="Input ID" class="form-control">
           <div class="input-group-append">
-            <button class="btn btn-danger" (click)="removeInput(i)">Remove Input</button>
+            <button class="btn btn-danger" (click)="removeInput(i)">Remove</button>
           </div>
         </div>
         <textarea [(ngModel)]="input.text" placeholder="Input Text" class="form-control mt-3"></textarea>
       </div>
-      <button class="btn btn-primary mt-3" (click)="addInput()">Add Input</button>
+      <button class="btn btn-primary mt-3" (click)="addInput()">Add</button>
     </div>
 
     <div class="col-4">
