@@ -31,13 +31,13 @@
         <label for="temperature">Temperature</label>
         <input [(ngModel)]="config.temperature" id="temperature" class="form-control">
       </div>
-      <button class="btn btn-primary mt-3" (click)="callAPI()">Get Response</button>
+      <button class="btn btn-primary mt-3" (click)="callAPI()">Send</button>
     </div>
   </div>
 
   <h2 class="mt-5">Responses</h2>
   <div *ngFor="let response of responses">
     <textarea [value]="response" class="form-control" rows="5" readonly></textarea>
-    <hr> <!-- Add a separator -->
+    <br>
   </div>
 </div>
