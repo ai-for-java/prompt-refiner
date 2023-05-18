@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { NgModel } from '@angular/forms';
 
 
 interface APIResponse {
@@ -81,9 +80,13 @@ export class AppComponent {
   }
 
   callAPI() {
+
+    const timestamp = Date.now().toString();
+    localStorage.setItem(timestamp, this.prompt.userPrompt);
+
     let finalPrompt = this.prompt.userPrompt;
     for (const input of this.prompt.userPromptInputs) {
-      finalPrompt = finalPrompt.replace(`\${${input.id}}`, input.text);
+      finalPrompt = finalPrompt.replace(`{{${input.id}}}`, input.text);
     }
 
     const messages = [
@@ -153,6 +156,9 @@ export class AppComponent {
                 self.responses[0] += '########################################';
                 self.responses[0] += '\n\n';
                 self.responses[0] += body
+
+                const timestamp = Date.now().toString();
+                localStorage.setItem(timestamp + "-response", self.responses[0]);
                 break;
               }
               if (event && event.slice(0, 6) === 'data: ') {
@@ -179,5 +185,10 @@ export class AppComponent {
         observer.error();
       });
     });
+  }
+
+  numberOfLines(str: string): number {
+    const matches = str.match(/\n/g);
+    return matches ? matches.length + 1 : 1;
   }
 }

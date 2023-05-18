@@ -1,13 +1,8 @@
 <style>
   .main-container {
-    border: 1px solid #e6e6e6;
+    border: 1px solid #d3d3d3;
     padding: 20px;
     border-radius: 10px;
-  }
-
-  h2 {
-    color: #3c3c3c;
-    margin-bottom: 20px;
   }
 
   .form-control {
@@ -23,33 +18,59 @@
     background-color: #0069d9;
     border-color: #0062cc;
   }
+
+  .input-box {
+    border: 1px solid #d3d3d3;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+
+  .input-id {
+    width: 50%;
+  }
+
+  .remove-button {
+    text-align: right;
+  }
 </style>
 
 <div class="container main-container">
   <div class="row">
-    <div class="col-8">
-      <h2>System Prompt</h2>
-      <textarea [(ngModel)]="prompt.systemPrompt" class="form-control" rows="1"></textarea>
+    <div class="col-9">
 
-      <h2>User Prompt</h2>
+      <h4>System Prompt</h4>
+      <textarea [(ngModel)]="prompt.systemPrompt" class="form-control" rows="2"></textarea>
+
+      <h4>User Prompt</h4>
       <textarea [(ngModel)]="prompt.userPrompt" (ngModelChange)="analyzePrompt($event)" class="form-control"
                 rows="10"></textarea>
 
-      <h2>Inputs</h2>
+      <h4>Prompt Inputs</h4>
+
       <div *ngFor="let input of prompt.userPromptInputs; index as i">
-        <div class="input-group mt-3">
-          <input [(ngModel)]="input.id" placeholder="Input ID" class="form-control">
-          <div class="input-group-append">
-            <button class="btn btn-primary mt-3" (click)="removeInput(i)">Remove</button>
+        <div class="input-box">
+          <div class="row">
+            <div class="col-6 form-group input-id">
+              <input [(ngModel)]="input.id" placeholder="Input ID" class="form-control">
+            </div>
+            <div class="col-6 form-group remove-button">
+              <button class="btn btn-primary" (click)="removeInput(i)">Remove</button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 form-group">
+              <textarea [(ngModel)]="input.text" placeholder="Input Text" class="form-control" rows="5"></textarea>
+            </div>
           </div>
         </div>
-        <textarea [(ngModel)]="input.text" placeholder="Input Text" class="form-control mt-3"></textarea>
       </div>
-      <button class="btn btn-primary mt-3" (click)="addInput()">Add</button>
+
+      <button class="btn btn-primary mt-3" (click)="addInput()">Add Input</button>
     </div>
 
-    <div class="col-4">
-      <h2>Parameters</h2>
+    <div class="col-3">
+      <h4>Parameters</h4>
 
       <div class="form-group">
         <label for="model">Model</label>
@@ -66,10 +87,19 @@
       <button class="btn btn-primary mt-3" (click)="callAPI()">Send</button>
     </div>
   </div>
+  <br/>
 
-  <h2 class="mt-5">Responses</h2>
+  <h4>Responses</h4>
   <div *ngFor="let response of responses">
-    <textarea [value]="response" class="form-control" rows="5" readonly></textarea>
+    <div class="row">
+      <div class="col-8">
+        <textarea [value]="response" class="form-control" [rows]="numberOfLines(response)" readonly></textarea>
+      </div>
+      <div class="col-4">
+        <textarea [value]="response" class="form-control" [rows]="numberOfLines(response)" readonly></textarea>
+      </div>
+    </div>
     <br>
   </div>
+
 </div>
