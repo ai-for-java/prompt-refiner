@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { NgZone } from '@angular/core';
+import { NgModel } from '@angular/forms';
+
 
 interface APIResponse {
   id: string;
@@ -57,7 +57,16 @@ export class AppComponent {
     userPromptInputs: [],
   };
 
-  constructor(private http: HttpClient, private zone: NgZone) {}
+  analyzePrompt(value: string): void {
+    const regex = /\$\{([^\}]*)\}/g;
+    let match;
+    while (match = regex.exec(value)) {
+      const placeholderId = match[1];
+      if (!this.prompt.userPromptInputs.some(input => input.id === placeholderId)) {
+        this.prompt.userPromptInputs.push({id: placeholderId, text: ''});
+      }
+    }
+  }
 
   addInput() {
     this.prompt.userPromptInputs.push({ id: '', text: '' });

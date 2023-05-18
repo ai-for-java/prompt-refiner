@@ -1,18 +1,41 @@
-<div class="container">
+<style>
+  .main-container {
+    border: 1px solid #e6e6e6;
+    padding: 20px;
+    border-radius: 10px;
+  }
+  h2 {
+    color: #3c3c3c;
+    margin-bottom: 20px;
+  }
+  .form-control {
+    margin-bottom: 15px;
+  }
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+  .btn-primary:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+  }
+</style>
+
+<div class="container main-container">
   <div class="row">
     <div class="col-8">
       <h2>System Prompt</h2>
-      <textarea [(ngModel)]="prompt.systemPrompt" class="form-control" rows="2"></textarea>
+      <textarea [(ngModel)]="prompt.systemPrompt" class="form-control" rows="1"></textarea>
 
-      <h2>Prompt</h2>
-      <textarea [(ngModel)]="prompt.userPrompt" class="form-control" rows="10"></textarea>
+      <h2>User Prompt</h2>
+      <textarea [(ngModel)]="prompt.userPrompt" (ngModelChange)="analyzePrompt($event)" class="form-control" rows="10"></textarea>
 
       <h2>Inputs</h2>
       <div *ngFor="let input of prompt.userPromptInputs; index as i">
         <div class="input-group mt-3">
           <input [(ngModel)]="input.id" placeholder="Input ID" class="form-control">
           <div class="input-group-append">
-            <button class="btn btn-danger" (click)="removeInput(i)">Remove</button>
+            <button class="btn btn-primary mt-3" (click)="removeInput(i)">Remove</button>
           </div>
         </div>
         <textarea [(ngModel)]="input.text" placeholder="Input Text" class="form-control mt-3"></textarea>
