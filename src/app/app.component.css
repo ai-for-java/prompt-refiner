@@ -1,0 +1,31 @@
+.response-container {
+  position: relative;
+}
+
+.response-content {
+  height: auto;
+  resize: vertical;
+  overflow-y: scroll;
+  margin-bottom: 10px;
+  white-space: pre-wrap;
+}
+
+.response-info {
+  margin-top: 5px;
+}
+
+.response-info-toggle {
+  cursor: pointer;
+}
+
+.response-info-content {
+  margin-top: 5px;
+}
+
+.response-info-item {
+  margin-bottom: 5px;
+}
+
+.response-info-content [hidden] {
+  display: none;
+}

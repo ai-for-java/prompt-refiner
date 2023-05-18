@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col-8">
-      <h2>Main Prompt</h2>
+      <h2>Prompt</h2>
       <textarea [(ngModel)]="prompt.main" class="form-control" rows="5"></textarea>
 
       <h2>Inputs</h2>
@@ -18,7 +18,7 @@
     </div>
 
     <div class="col-4">
-      <h2>Configuration</h2>
+      <h2>Parameters</h2>
       <div class="form-group">
         <label for="model">Model</label>
         <input [(ngModel)]="config.model" id="model" class="form-control">
@@ -26,10 +26,6 @@
       <div class="form-group">
         <label for="temperature">Temperature</label>
         <input [(ngModel)]="config.temperature" id="temperature" class="form-control">
-      </div>
-      <div class="form-group">
-        <label for="maxTokens">Max Tokens</label>
-        <input [(ngModel)]="config.max_tokens" id="maxTokens" class="form-control">
       </div>
       <button class="btn btn-primary mt-3" (click)="callAPI()">Get Response</button>
     </div>

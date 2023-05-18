@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {Component} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 interface APIResponse {
   id: string;
@@ -40,21 +40,21 @@ interface Input {
 })
 export class AppComponent {
   title = 'Prompt Refiner';
-  responses: string[] = [];
+  responses: String[] = [];
   config = {
     model: 'gpt-3.5-turbo',
-    temperature: 0.0,
-    max_tokens: 4096,
+    temperature: 0.0
   };
   prompt: Prompt = {
     main: '',
     inputs: [],
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   addInput() {
-    this.prompt.inputs.push({ id: '', text: '' });
+    this.prompt.inputs.push({id: '', text: ''});
   }
 
   removeInput(index: number) {
@@ -72,7 +72,7 @@ export class AppComponent {
       Authorization: `Bearer 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`,
     };
     const body = {
-      model: this.config.model || 'gpt-3.5-turbo',
+      model: this.config.model,
       messages: [
         {
           role: 'user',
@@ -87,13 +87,18 @@ export class AppComponent {
     console.log('Request Body:', body);
 
     this.http
-      .post<APIResponse>('https://api.openai.com/v1/chat/completions', body, { headers })
+      .post<APIResponse>('https://api.openai.com/v1/chat/completions', body, {headers})
       .subscribe(
         (data: APIResponse) => {
-          const responseContent = data.choices[0]?.message?.content;
+          const responseContent = data.choices[0]?.message;
           if (responseContent) {
-            const finalResponse = responseContent + '\n\n-------------------------\n\n' + finalPrompt;
-            this.responses.unshift(finalResponse);
+            this.responses.unshift(data.choices[0].message.content +
+              '\n\n' +
+              '################################################################\n' +
+              '################################################################\n\n'
+              + 'Prompt: ' + finalPrompt + '\n'
+              + 'Model: ' + this.config.model + '\n'
+              + 'Temperature: ' + this.config.temperature);
           }
           console.log('Response:', data);
         },
