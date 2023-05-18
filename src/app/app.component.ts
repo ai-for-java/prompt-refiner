@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { NgZone } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 
 interface APIResponse {
   id: string;
@@ -97,7 +96,7 @@ export class AppComponent {
 
     this.chatStream(
       'https://api.openai.com/v1/chat/completions',
-      body,
+      JSON.stringify(body),
       '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'
     ).subscribe();
   }
@@ -105,12 +104,12 @@ export class AppComponent {
   responses: string[] = [];
 
   // ...
-  chatStream(url: string, body: any, apikey: string) {
+  chatStream(url: string, body: string, apikey: string) {
     const self = this; // Capture reference to 'this'
     return new Observable<string>(observer => {
       fetch(url, {
         method: 'POST',
-        body: JSON.stringify(body),
+        body: body,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${apikey}`,
@@ -136,13 +135,19 @@ export class AppComponent {
             let content = '';
             for (let i = 0; i < events.length; i++) {
               const event = events[i];
-              if (event === 'data: [DONE]') break;
+              if (event === 'data: [DONE]'){
+                self.responses[0] += '\n\n';
+                self.responses[0] += '########################################';
+                self.responses[0] += '\n\n';
+                self.responses[0] += body
+                break;
+              }
               if (event && event.slice(0, 6) === 'data: ') {
                 const data = JSON.parse(event.slice(6));
-                let content1 = data.choices[0].delta?.content || '';
-                console.log(content1);
-                self.responses[0] += content1; // Use the captured reference 'self'
-                content += content1;
+                let partialResponse = data.choices[0].delta?.content || '';
+                console.log(partialResponse);
+                self.responses[0] += partialResponse; // Use the captured reference 'self'
+                content += partialResponse;
               }
             }
             observer.next(content);
