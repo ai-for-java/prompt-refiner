@@ -125,7 +125,7 @@ export class AppComponent {
     this.chatStream(
       'https://api.openai.com/v1/chat/completions',
       JSON.stringify(body, null, 4),
-      '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'
+      ''
     ).subscribe();
   }
 
