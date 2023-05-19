@@ -148,7 +148,7 @@ export class AppComponent {
         const decoder = new TextDecoder();
         if (!response.ok) {
           console.info(response)
-          // handle response error
+          alert(response);
           observer.error();
         }
 
@@ -182,6 +182,7 @@ export class AppComponent {
           }).catch((err: Error) => {
             // handle fetch error
             console.error(err)
+            alert(err);
             observer.error();
           });
         }
@@ -190,6 +191,7 @@ export class AppComponent {
       }).catch((err: Error) => {
         // handle fetch error
         console.error(err)
+        alert(err);
         observer.error();
       });
     });
