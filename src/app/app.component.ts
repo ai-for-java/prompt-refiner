@@ -1,7 +1,6 @@
 import {Component} from '@angular/core';
 import {Observable} from 'rxjs';
 
-
 interface APIResponse {
   id: string;
   object: string;
@@ -53,6 +52,7 @@ export class AppComponent {
   title = 'Prompt Refiner';
 
   config = {
+    apiKey: '',
     model: 'gpt-3.5-turbo',
     temperature: 0.0,
   };
@@ -124,17 +124,21 @@ export class AppComponent {
       this.requestsAndResponses[0].request += `\n${input.id}: ${input.text}`;
     }
 
-    this.chatStream(
+    this.chatStream(  // assign the subscription to the property
       'https://api.openai.com/v1/chat/completions',
-      JSON.stringify(body, null, 4),
-      ''
+      JSON.stringify(body, null, 4)
     ).subscribe();
+  }
+
+  stopped: boolean = false;
+
+  stopResponseGeneration() {
+    this.stopped = true;
   }
 
   requestsAndResponses: PromptEvaluation[] = [];
 
-  // ...
-  chatStream(url: string, body: string, apikey: string) {
+  chatStream(url: string, body: string) {
     const self = this;
 
     return new Observable<string>(observer => {
@@ -143,7 +147,7 @@ export class AppComponent {
         body: body,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apikey}`,
+          'Authorization': `Bearer ${this.config.apiKey}`,
         },
       }).then(response => {
         const reader = response.body?.getReader();
@@ -166,11 +170,19 @@ export class AppComponent {
             let content = '';
             for (let i = 0; i < events.length; i++) {
               const event = events[i];
+
+              if (self.stopped) {
+                console.log("STOPPING")
+                self.stopped = false;
+                return;
+              }
+
               if (event === 'data: [DONE]') {
                 const timestamp = Date.now().toString();
                 localStorage.setItem(timestamp + "-response", self.requestsAndResponses[0].response);
                 break;
               }
+
               if (event && event.slice(0, 6) === 'data: ') {
                 const data = JSON.parse(event.slice(6));
                 let partialResponse = data.choices[0].delta?.content || '';
@@ -197,10 +209,6 @@ export class AppComponent {
         observer.error();
       });
     });
-  }
-
-  maxNumberOfLines(str1: string, str2: string): number {
-    return Math.max(this.numberOfLines(str1), this.numberOfLines(str2))
   }
 
   numberOfLines(str: string): number {

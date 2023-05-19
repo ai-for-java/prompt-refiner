@@ -69,19 +69,22 @@
     <div class="col-3">
       <h4>Parameters</h4>
 
-      <div class="form-group">
-        <label for="model">Model</label>
-        <select [(ngModel)]="config.model" id="model" class="form-control">
-          <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
-          <option value="gpt-4">gpt-4</option>
-        </select>
-      </div>
+      <label for="model">OpenAI API key</label>
+      <input [(ngModel)]="config.apiKey" id="apiKey" class="form-control"/>
 
-      <div class="form-group">
-        <label for="temperature">Temperature</label>
-        <input [(ngModel)]="config.temperature" id="temperature" class="form-control">
-      </div>
+      <label for="model">Model</label>
+      <select [(ngModel)]="config.model" id="model" class="form-control">
+        <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+        <option value="gpt-4">gpt-4</option>
+      </select>
+
+      <label for="temperature">Temperature</label>
+      <input [(ngModel)]="config.temperature" id="temperature" class="form-control">
+
       <button class="btn btn-primary mt-3" (click)="callAPI()">Send</button>
+      <br/>
+      <br/>
+      <button class="btn btn-primary mt-3" (click)="stopResponseGeneration()">Stop</button>
     </div>
   </div>
   <br/>
@@ -90,13 +93,16 @@
   <div *ngFor="let requestAndResponse of requestsAndResponses">
     <div class="row">
       <div class="col-8">
-        <textarea [value]="requestAndResponse.response" class="form-control" [rows]="maxNumberOfLines(requestAndResponse.response, requestAndResponse.request)" readonly></textarea>
+        <textarea [value]="requestAndResponse.response" class="form-control"
+                  [rows]="numberOfLines(requestAndResponse.response)" readonly></textarea>
       </div>
       <div class="col-2">
-        <textarea [value]="requestAndResponse.request" class="form-control" [rows]="maxNumberOfLines(requestAndResponse.response, requestAndResponse.request)" readonly></textarea>
+        <textarea [value]="requestAndResponse.request" class="form-control"
+                  [rows]="numberOfLines(requestAndResponse.response)" readonly></textarea>
       </div>
       <div class="col-2">
-        <textarea [value]="requestAndResponse.comments" class="form-control" [rows]="maxNumberOfLines(requestAndResponse.response, requestAndResponse.request)"></textarea>
+        <textarea [value]="requestAndResponse.comments" class="form-control"
+                  [rows]="numberOfLines(requestAndResponse.response)"></textarea>
       </div>
     </div>
     <br>
