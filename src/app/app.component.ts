@@ -148,7 +148,7 @@ export class AppComponent {
         const decoder = new TextDecoder();
         if (!response.ok) {
           console.info(response)
-          alert(response);
+          alert(response.status + ": " + response.statusText + "\nSee console for more info.");
           observer.error();
         }
 
@@ -182,7 +182,7 @@ export class AppComponent {
           }).catch((err: Error) => {
             // handle fetch error
             console.error(err)
-            alert(err);
+            alert(err + "\nSee console for more info.");
             observer.error();
           });
         }
@@ -191,7 +191,7 @@ export class AppComponent {
       }).catch((err: Error) => {
         // handle fetch error
         console.error(err)
-        alert(err);
+        alert(err + "\nSee console for more info.");
         observer.error();
       });
     });
