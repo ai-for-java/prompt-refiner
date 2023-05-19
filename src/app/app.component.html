@@ -92,8 +92,11 @@
       <div class="col-8">
         <textarea [value]="requestAndResponse.response" class="form-control" [rows]="maxNumberOfLines(requestAndResponse.response, requestAndResponse.request)" readonly></textarea>
       </div>
-      <div class="col-4">
+      <div class="col-2">
         <textarea [value]="requestAndResponse.request" class="form-control" [rows]="maxNumberOfLines(requestAndResponse.response, requestAndResponse.request)" readonly></textarea>
+      </div>
+      <div class="col-2">
+        <textarea [value]="requestAndResponse.comments" class="form-control" [rows]="maxNumberOfLines(requestAndResponse.response, requestAndResponse.request)"></textarea>
       </div>
     </div>
     <br>

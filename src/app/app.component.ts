@@ -38,9 +38,10 @@ interface Input {
   text: string;
 }
 
-interface RequestResponse {
-  request: string;
+interface PromptEvaluation {
   response: string;
+  request: string;
+  comments: string;
 }
 
 @Component({
@@ -115,7 +116,8 @@ export class AppComponent {
 
     this.requestsAndResponses.unshift({
       response: '',
-      request: `Model: ${this.config.model}\nTemperature: ${this.config.temperature}\n\nSystem Prompt: ${this.prompt.systemPrompt}\n\nUser Prompt: ${this.prompt.userPrompt}`
+      request: `Model: ${this.config.model}\nTemperature: ${this.config.temperature}\n\nSystem Prompt: ${this.prompt.systemPrompt}\n\nUser Prompt: ${this.prompt.userPrompt}`,
+      comments: ''
     });
 
     for (const input of this.prompt.userPromptInputs) {
@@ -129,7 +131,7 @@ export class AppComponent {
     ).subscribe();
   }
 
-  requestsAndResponses: RequestResponse[] = [];
+  requestsAndResponses: PromptEvaluation[] = [];
 
   // ...
   chatStream(url: string, body: string, apikey: string) {
